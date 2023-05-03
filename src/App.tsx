@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { currencyFormatter } from './utils/formatters';
-import { Button, Grid, Box, Drawer, TextField, Typography } from '@mui/material';
+import { Grid, Box, Drawer, TextField, Typography } from '@mui/material';
 import { ShoppingBasketOutlined } from '@mui/icons-material';
 import { CartProduct } from './components/CartProduct'
 import { Product } from './components/Product';
 
 import { ProductType, CartProductType } from './types';
 import './App.css';
-
-// https://my-json-server.typicode.com/citayesh/product-api/SHOP_DATA
- 
-// 1. Create a new reactJS project
-// 2. Fetch a list of products from an endpoint
-// 3. Display the products from the endpoint on a 4 x 4 grid
-// 4. Create a search box that can search the products list based on name
 
 function App() {
   const [products, setProducts] = useState<ProductType[]>([]);
