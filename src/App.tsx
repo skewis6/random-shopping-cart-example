@@ -3,9 +3,11 @@ import { Grid, Box, Drawer, TextField, Typography } from '@mui/material';
 import { ShoppingBasketOutlined } from '@mui/icons-material';
 import { CartProduct } from './components/CartProduct'
 import { Product } from './components/Product';
+import { useCookies } from 'react-cookie';
 
 import { ProductType, CartProductType } from './types';
 import './App.css';
+
 
 function App() {
   const [products, setProducts] = useState<ProductType[]>([]);
@@ -13,6 +15,7 @@ function App() {
   const [search, setSearch] = useState<string>('');
   const [cart, setCart] = useState<CartProductType[]>([]);
   const [showCart, setShowCart] = useState<boolean>(false);
+  const [cookies, setCookie] = useCookies(['cart']);
 
   useEffect(() => {
     fetch('https://my-json-server.typicode.com/citayesh/product-api/SHOP_DATA')
@@ -21,6 +24,11 @@ function App() {
         setProducts(data.hats.items);
         setCloneProducts(data.hats.items);
       });
+
+      const cartCookie = cookies.cart;
+      if (cartCookie) {
+        setCart(cartCookie);
+      }
   }, []);
 
   useEffect(() => {
@@ -31,6 +39,10 @@ function App() {
       setProducts(cloneProucts);
     }
   }, [search]);
+
+  useEffect(() => {
+    setCookie('cart', cart, { path: '/' });
+  }, [cart]);
 
   const handleAddToCart = (product: ProductType) => {
     const itemExists = cart.find((item) => item.id === product.id)
@@ -58,7 +70,7 @@ function App() {
         {cart.length > 0 && <span className='number'>{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>}
         <Drawer open={showCart} anchor='right' sx={{ width: 300 }} onClose={() => setShowCart(false)}>
           <Box sx={{ padding: 5 }}>
-          {cart.length ? cart.map((item) => (
+          {cart.length ? cookies.cart.map((item) => (
             <CartProduct key={item.id} {...item} handleRemoveFromCart={handleRemoveFromCart} />
           )) : <p>Cart is empty</p>}
           </Box>
